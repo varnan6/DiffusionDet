@@ -36,6 +36,7 @@ from diffusiondet import DiffusionDetDatasetMapper, add_diffusiondet_config, Dif
 from diffusiondet.util.model_ema import add_model_ema_configs, may_build_model_ema, may_get_ema_checkpointer, EMAHook, \
     apply_model_ema_and_restore, EMADetectionCheckpointer
 
+from register_seaclear import * # Importing seaclear dataset registration.
 
 class Trainer(DefaultTrainer):
     """ Extension of the Trainer class adapted to DiffusionDet. """

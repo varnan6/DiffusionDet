@@ -1,0 +1,63 @@
+# ==============================
+# DiffusionDet (ResNet101) SeaClear Config
+# ==============================
+MODEL:
+  META_ARCHITECTURE: "DiffusionDet"
+  WEIGHTS: "models/torchvision-R-101.pkl"    # pretrained ResNet101
+  PIXEL_MEAN: [123.675, 116.280, 103.530]
+  PIXEL_STD: [58.395, 57.120, 57.375]
+
+  BACKBONE:
+    NAME: "build_resnet_fpn_backbone"
+
+  RESNETS:
+    DEPTH: 101
+    STRIDE_IN_1X1: False
+    OUT_FEATURES: ["res2", "res3", "res4", "res5"]
+
+  FPN:
+    IN_FEATURES: ["res2", "res3", "res4", "res5"]
+
+  ROI_HEADS:
+    IN_FEATURES: ["p2", "p3", "p4", "p5"]
+
+  ROI_BOX_HEAD:
+    POOLER_TYPE: "ROIAlignV2"
+    POOLER_RESOLUTION: 7
+    POOLER_SAMPLING_RATIO: 2
+
+  DiffusionDet:
+    NUM_CLASSES: 40
+    NUM_PROPOSALS: 300           # keep original design
+    # ✅ Do not force to 300, natural design of DiffusionDet Res101
+
+SOLVER:
+  IMS_PER_BATCH: 2
+  BASE_LR: 5e-5                  # scaled LR for batch size
+  MAX_ITER: 450000               # original recommended iterations
+  STEPS: (350000, 420000)       # learning rate milestones
+  WARMUP_ITERS: 1000
+  WEIGHT_DECAY: 0.0001
+  OPTIMIZER: "ADAMW"
+  BACKBONE_MULTIPLIER: 1.0
+  CLIP_GRADIENTS:
+    ENABLED: True
+    CLIP_TYPE: "full_model"
+    CLIP_VALUE: 1.0
+    NORM_TYPE: 2.0
+
+INPUT:
+  MIN_SIZE_TRAIN: (640,)         # keep input fixed for comparison
+  FORMAT: "RGB"
+  CROP:
+    ENABLED: True
+
+TEST:
+  EVAL_PERIOD: 5000              # comparable with DEIM
+
+DATALOADER:
+  FILTER_EMPTY_ANNOTATIONS: False
+  NUM_WORKERS: 8                 # utilize CPU cores
+
+SEED: 40244023
+VERSION: 2

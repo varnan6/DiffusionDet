@@ -1,0 +1,21 @@
+_BASE_: "Base-DiffusionDet_seaclear.yaml"
+MODEL:
+  WEIGHTS: "/home/rbu/Comparison_Paper_Object_Detection/DiffusionDet/pretrained_model/diffdet_coco_res101.pth"
+  RESNETS:
+    DEPTH: 101
+    STRIDE_IN_1X1: False
+  DiffusionDet:
+    NUM_PROPOSALS: 500
+    NUM_CLASSES: 40 # Seaclear
+DATASETS:
+  TRAIN: ("seaclear_train",)
+  TEST:  ("seaclear_val",)
+SOLVER:
+  STEPS: (350000, 420000)
+  MAX_ITER: 225000
+INPUT:
+  CROP:
+    ENABLED: True
+  FORMAT: "RGB"
+
+SEED: 42
